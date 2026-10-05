@@ -1,61 +1,41 @@
 import cv2
 from ultralytics import YOLO
 
-
 def main():
-    # โหลดโมเดลที่ผ่านการฝึก (Trained Model)
-    model = YOLO("best.pt")
+    # 1. ระบุ Absolute Path ของ weights ที่เทรนได้ล่าสุด
+    MODEL_PATH = r"C:\Users\Victus\Downloads\Beverage-Sachet-Detection-and-Classification-System-Using-YOLO26\tt\runs\detect\train-3\weights\best.pt"
+    model = YOLO(MODEL_PATH)
 
-    # เปิดใช้งานกล้องเว็บแคม
-    # เลข 0 หมายถึงกล้องตัวแรกที่เชื่อมต่อกับคอมพิวเตอร์
+    # 2. เปิดใช้งาน WebCam (0 คือกล้องหลักของเครื่อง)
     cap = cv2.VideoCapture(0)
 
-    # ตรวจสอบว่าสามารถเปิดกล้องได้หรือไม่
     if not cap.isOpened():
-        print("ไม่สามารถเปิดกล้องได้")
+        print("ไม่สามารถเปิดกล้อง WebCam ได้")
         return
 
-    # แสดงคำแนะนำการใช้งาน
-    print("กด 'q' เพื่อออกจากโปรแกรม")
+    print("เปิดกล้องสำเร็จ! กด 'q' บนหน้าต่างวิดีโอเพื่อปิดโปรแกรม")
 
-    # เริ่มการตรวจจับแบบ Real-time
     while True:
-        # อ่านภาพจากกล้องทีละเฟรม
-        success, frame = cap.read()
-
-        # ตรวจสอบว่าสามารถอ่านภาพจากกล้องได้
-        if success:
-
-            # นำภาพจากกล้องเข้าสู่โมเดล YOLO
-            results = model.predict(
-                source=frame,
-                stream=True,    # ประมวลผลแบบต่อเนื่อง เหมาะสำหรับวิดีโอหรือ Real-time
-                device='cpu'    # ใช้ CPU ในการประมวลผล
-            )
-
-            # วนลูปเพื่อรับผลลัพธ์จากโมเดล
-            for r in results:
-                # วาดกรอบ Bounding Box และชื่อ Class ลงบนภาพ
-                annotated_frame = r.plot()
-
-            # แสดงภาพที่ผ่านการตรวจจับบนหน้าต่าง
-            cv2.imshow("YOLO26 Real-time Detection", annotated_frame)
-
-            # กดปุ่ม 'q' เพื่อออกจากโปรแกรม
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        # หากไม่สามารถอ่านภาพจากกล้องได้ ให้หยุดการทำงาน
-        else:
+        ret, frame = cap.read()
+        if not ret:
+            print("ไม่สามารถรับสัญญาณภาพจากกล้องได้")
             break
 
-    # ปิดการเชื่อมต่อกับกล้อง
-    cap.release()
+        # 3. รัน Predict เฟรมต่อเฟรม
+        results = model.predict(source=frame, conf=0.5, verbose=False)
 
-    # ปิดหน้าต่างแสดงผลทั้งหมด
+        # 4. วาด Bounding Box และ Label ลงบนเฟรม
+        annotated_frame = results[0].plot()
+
+        # แสดงผลภาพจากกล้อง
+        cv2.imshow("YOLO Beverage Sachet Detection", annotated_frame)
+
+        # กด 'q' เพื่อออกจากโปรแกรม
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
     cv2.destroyAllWindows()
 
-
-# เรียกใช้งานฟังก์ชัน main()
 if __name__ == '__main__':
     main()
