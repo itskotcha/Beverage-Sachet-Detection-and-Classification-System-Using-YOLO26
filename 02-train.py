@@ -8,7 +8,7 @@ if __name__ == '__main__':
     # เริ่มเทรนพร้อมตั้งค่า Data Augmentation
     results = model.train(
         # ระบุ Absolute Path ของ data.yaml ให้ชัดเจน
-        data=r'C:\Users\Victus\Downloads\Beverage-Sachet-Detection-and-Classification-System-Using-YOLO26\tt\data.yaml',
+        data=r'C:\Users\Victus\Downloads\Beverage-Sachet-Detection-and-Classification-System-Using-YOLO26\dataset\data.yaml',
         device='cpu',
         
         # --- พารามิเตอร์สำหรับ Data Augmentation หลัก ---

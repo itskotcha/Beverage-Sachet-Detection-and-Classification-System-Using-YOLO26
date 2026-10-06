@@ -2,5 +2,5 @@ path: C:\Users\Victus\Downloads\Beverage-Sachet-Detection-and-Classification-Sys
 train: images/train
 val: images/val
 
-nc: 8
-names: ['BIRDY', 'Birdy', 'MATCTA', 'Matcha', 'NESCAFE', 'NESTEA', 'OVALTINT', 'Ovaltine']
+nc: 5
+names: ['Birdy', 'Matcha', 'NESCAFE', 'NESTEA', 'Ovaltine']
